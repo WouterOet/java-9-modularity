@@ -24,8 +24,333 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<br>
+					<h1>The Sane Monolith</h1>
+				</section>
+
+				<section>
+					<img src="images/wouter.jpg" style="max-width: 400px">
+					<h3>Wouter Oet</h3>
+				</section>
+
+				<section>
+					<h3>The Monolith</h3>
+
+					<img src="images/monolith.png" class="my" />
+
+					<aside class="notes">
+						Applicaties worden groter over tijd<br><br>
+
+						Nadelen:<br>
+						<br>Minder overzichtelijk
+						<br>Moeilijk om veranderingen door te voeren
+						<br>Classpath
+					</aside>
+				</section>
+
+				<section>
+					<h3>Opbreken!</h3>
+
+					<img src="images/micro.png" class="my" />
+
+					<aside class="notes">
+						Clear api<br>
+						De rest is intern<br><br>
+
+						Laten we dat een module noemen<br><br>
+
+						Microservices?<br>
+						Netwerk overhead<br>
+						Netwerk onbetrouwbaar<br>
+						Moeilijker te deployen en overzicht te houden<br>
+					</aside>
+				</section>
+
+				<section>
+					<h3>Java Modularity</h3>
+
+					<img src="images/modules.png" class="my" />
+
+					<aside class="notes">
+						Java 9<br>
+
+						Expliciete dependencies<br>
+					</aside>
+				</section>
+
+				<section>
+					<h3>Java Modularity</h3>
+					<pre>
+module org.baz.foo {
+}
+					</pre>
+
+					<img src="images/one-module.png" class="my" />
+
+					<aside class="notes">
+						Naam
+					</aside>
+				</section>
+
+				<section>
+					<h3>Java Modularity</h3>
+					<pre>
+module org.baz.foo {
+	exports org.baz.foo.api;
+}
+					</pre>
+
+					<img src="images/two-module.png" class="my" />
+
+					<aside class="notes">
+						Andere modules kunnen alleen deze package gebruiken<br><br>
+						Extra visibility level <br>
+						Jij kan geen andere modules gebruiken, behalve java.lang.base <br>
+						String encapsulation
+					</aside>
+				</section>
+
+				<section>
+					<h3>Java Modularity</h3>
+					<pre>
+module org.baz.foo {
+	exports org.baz.foo.api;
+
+	requires org.acme.bar;
+}
+					</pre>
+
+					<img src="images/three-module.png" class="my" />
+
+					<aside class="notes">
+						<table>
+							<tr>
+								<td>Expliciete dependencies<br>
+									Compile check & startup check<br>
+									Speed improvement<br>
+
+
+									Een module is set aan classes met een expliciete api, interne implementatie<br>
+									en een lijst aan expliciete dependencies<br><br></td>
+								<td>
+									SLF4j
+								</td>
+							</tr>
+						</table>
+
+					</aside>
+				</section>
+
+				<section>
+					<h3>Java Modularity</h3>
+					<img src="images/four-modules.png" class="my">
+
+					<aside class="notes">
+						a-cyclic directed graph<br>
+						Eerste grote implementatie: jdk<br>
+						Precies weet welke modules je nodig hebt: jlink
+					</aside>
+				</section>
+
+				<section>
+					<h3>Java Modularity</h3>
+
+					<img src="images/transitive.png" class="my" />
+					<aside class="notes">
+						transitive
+					</aside>
+				</section>
+
+
+				<section>
+					<h3>module-info.java</h3>
+
+					<pre>
+module org.baz.foo {
+	exports org.baz.foo.api;
+
+	requires org.acme.bar;
+}
+                    </pre>
+					<aside class="notes">
+						root van sources<br>
+						gecompileerd<br>
+						onderdeel van de jar
+					</aside>
+				</section>
+
+				<section>
+					<h3>Hoe komen we daar?</h3>
+
+					<aside class="notes">
+						Top down & bottom-up
+					</aside>
+				</section>
+
+				<section>
+					<h3>Bottom-up</h3>
+
+					<img src="images/step-0.png" class="my" />
+
+				</section>
+
+				<section>
+					<h3>Bottom-up</h3>
+
+					<img src="images/step-1.png" class="my" />
+				</section>
+
+				<section>
+					<h3>Bottom-up</h3>
+
+					<img src="images/step-2.png" class="my" />
+				</section>
+
+				<section>
+					<h3>Bottom-up</h3>
+
+					<img src="images/step-3.png" class="my" />
+				</section>
+
+				<section>
+					<h3>Bottom-up</h3>
+
+					<img src="images/step-4.png" class="my" />
+
+					<aside class="notes">
+						Externe library
+					</aside>
+				</section>
+
+				<section>
+					<h3>Types of modules</h3>
+
+					<ul>
+						<li class="fragment">Named modules</li>
+						<li class="fragment">Unnamed module</li>
+						<li class="fragment">Automatic modules</li>
+					</ul>
+
+					<aside class="notes">
+						Unnamed bevat de rest van het classpath
+					</aside>
+				</section>
+
+				<section>
+					<h3>Command line parameters</h3>
+
+					<ul>
+						<li>Class path</li>
+						<li class="fragment">Module path</li>
+					</ul>
+
+					<img src="images/step-4.png" class="my fragment" />
+
+					<aside class="notes">
+						Wat als je hier een gewone jar neer zet?
+					</aside>
+				</section>
+
+				<section>
+					<h3>Valkuilen</h3>
+
+					<img src="images/circular.png" class="my fragment" />
+
+					<aside class="notes">
+						a-cyclic graph
+					</aside>
+				</section>
+
+				<section>
+					<h3>Valkuilen</h3>
+
+					<img src="images/packages.png" class="my" />
+
+					<aside class="notes">
+						Split packages
+						opstart snelheid
+					</aside>
+				</section>
+
+				<section>
+					<h3>Valkuilen</h3>
+
+					<ul>
+						<li>Toegang tot interne API's</li>
+						<li class="fragment">Andere classloaders</li>
+						<li class="fragment">Geen rt.jar</li>
+						<li class="fragment">Java versie is nu: 9</li>
+					</ul>
+
+					<aside class="notes">
+						Geen URLClassLoader <br>
+						Geen 1.9
+					</aside>
+				</section>
+
+				<section>
+					<h3>Start de migratie!</h3>
+
+					<aside class="notes">
+						Libraries zijn nu geschikt <br>
+						Tooling is geschikt <br>
+						Mooie features Java 9+ <br>
+						Soms een traject
+					</aside>
+				</section>
+
+				<section>
+					<br>
+					<h3>Vragen?</h3>
+				</section>
+
+				<section>
+					<h3>Transitive</h3>
+
+					<img src="images/transitive.png" class="my" />
+
+					<pre class="fragment">
+module com.foo.baz {
+    requires transitive com.acme.bar;
+}
+                    </pre>
+				</section>
+
+				<section>
+					<h3>Open</h3>
+
+					<pre class="fragment">
+module com.foo.baz {
+  opens com.foo.baz.domain;
+}
+                    </pre>
+
+					<aside class="notes">
+						reflection
+					</aside>
+				</section>
+
+				<section>
+					<h3>Services</h3>
+
+					<pre class="fragment">
+module com.foo.baz {
+   requires com.acme.api;
+
+   uses com.acme.api.Service;
+}
+                    </pre>
+
+					<pre class="fragment">
+module my.api.impl {
+   requires com.acme.api;
+
+   provides com.acme.api.Service with
+         my.api.internal.ServiceImpl;
+}
+                    </pre>
+				</section>
 			</div>
 		</div>
 
